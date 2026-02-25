@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itinerario Londres 2026</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --london-red: #C8102E;
+            --london-blue: #00247D;
+            --soft-gray: #f0f2f5;
+            --dark-text: #1a1a1a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; scroll-behavior: smooth; }
+
+        body { background-color: var(--soft-gray); color: var(--dark-text); padding-top: 60px; }
+
+        /* Banner de Navegación */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%; background: white;
+            display: flex; justify-content: center; gap: 15px; padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;
+        }
+
+        .navbar a {
+            text-decoration: none; color: var(--london-blue); font-weight: bold;
+            font-size: 0.9rem; padding: 8px 15px; border-radius: 20px;
+            transition: 0.3s; border: 1px solid transparent;
+        }
+
+        .navbar a:hover { background: var(--london-red); color: white; }
+        .navbar a.active { background: var(--london-red); color: white; }
+
+        header {
+            background:
+                linear-gradient(rgba(0,0,0,0.28), rgba(0,0,0,0.28)),
+                url('https://images.westend61.de/0001247736pw/vista-desde-un-angulo-alto-del-puente-de-la-torre-con-el-paisaje-urbano-de-fondo-sobre-un-cielo-nublado-en-londres-HNF00818.jpg');
+            background-size: cover;
+            background-position: center 45%;
+            background-repeat: no-repeat;
+            height: 30vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; text-align: center; margin-bottom: 40px;
+        }
+
+        .container { max-width: 850px; margin: 0 auto 50px; padding: 0 15px; }
+
+        .day-card {
+            background: white; border-radius: 15px; padding: 30px; margin-bottom: 50px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05); border-top: 5px solid var(--london-blue);
+            display: none;
+        }
+
+        .day-card.is-active { display: block; }
+
+        .day-header {
+            display: flex; align-items: baseline; justify-content: space-between;
+            border-bottom: 1px solid #eee; margin-bottom: 25px; padding-bottom: 10px;
+        }
+
+        .day-title { color: var(--london-red); font-size: 1.8rem; }
+        .wake-up { font-size: 0.95rem; color: #777; font-weight: 500; }
+
+        .event-row { display: flex; margin-bottom: 18px; padding-left: 15px; border-left: 2px solid #ddd; }
+        .time-slot { min-width: 120px; font-weight: 800; color: var(--london-blue); }
+        .description { flex: 1; font-size: 1rem; }
+        .description strong { color: #333; display: block; margin-bottom: 2px; }
+
+        .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; }
+        .confirmed { background: #d4edda; color: #155724; }
+        .pending { background: #fff3cd; color: #856404; }
+
+        .gallery-title {
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: var(--london-blue);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .photo-slot {
+            border-radius: 10px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .photo-slot img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-caption {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(0, 36, 125, 0.72);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-slot:hover .photo-caption { opacity: 1; }
+
+        @media (max-width: 600px) {
+            .navbar { gap: 5px; }
+            .navbar a { padding: 5px 8px; font-size: 0.75rem; }
+            .event-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="#dia1" class="active">SÁBADO</a>
+    <a href="#dia2">DOMMINGO</a>
+    <a href="#dia3">LUNES</a>
+    <a href="#dia4">MARTES</a>
+    <a href="#dia5">MIÉRCOLES</a>
+</nav>
+
+<header>
+    <h1>LONDRES</h1>
+    <p>Itinerario Completo</p>
+</header>
+
+<div class="container">
+
+    <section class="day-card is-active" id="dia1">
+        <div class="day-header">
+            <h2 class="day-title">Sábado</h2>
+            <span class="wake-up">Llegada a Londres</span>
+        </div>
+        <div class="event-row"><div class="time-slot">11:00 – 11:45</div><div class="description"><strong>Cambio de Guardia</strong>Buckingham Palace.</div></div>
+        <div class="event-row"><div class="time-slot">12:45 – 13:45</div><div class="description"><strong>Maltby Street Market</strong>Almuerzo gourmet.</div></div>
+        <div class="event-row"><div class="time-slot">15:00 – 15:45</div><div class="description"><strong>Stamford Bridge</strong>Estadio del Chelsea: fotos y tienda.</div></div>
+        <div class="event-row"><div class="time-slot">16:30</div><div class="description"><strong>Natural History Museum <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>Visita al museo.</div></div>
+        <div class="event-row"><div class="time-slot">18:00</div><div class="description"><strong>Harrods</strong>A 13 min andando del Museo.</div></div>
+        <div class="event-row"><div class="time-slot">Noche</div><div class="description"><strong>Sky Garden <span class="tag pending">PENDIENTE RESERVA</span></strong>Mirador al atardecer.</div></div>
+        
+        <h3 class="gallery-title">Fotos</h3>
+        <div class="photo-gallery">
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/buckingham-palace,changing-guard?lock=101" alt="Buckingham Palace"><div class="photo-caption">Buckingham Palace</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/market,london?lock=2" alt="Maltby Street Market"><div class="photo-caption">Maltby Street Market</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/stamford-bridge,chelsea,stadium?lock=3" alt="Stamford Bridge"><div class="photo-caption">Stamford Bridge</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/natural-history-museum,london?lock=4" alt="Natural History Museum"><div class="photo-caption">Natural History Museum</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/harrods,london?lock=5" alt="Harrods"><div class="photo-caption">Harrods</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/sky-garden,london?lock=6" alt="Sky Garden"><div class="photo-caption">Sky Garden</div></div>
+        </div>
+    </section>
+
+    <section class="day-card" id="dia2">
+        <div class="day-header">
+            <h2 class="day-title">Domingo</h2>
+            <span class="wake-up">Despertar 09:00</span>
+        </div>
+        <div class="event-row"><div class="time-slot">10:30 – 11:15</div><div class="description"><strong>Kyoto Garden y Design Museum</strong>Jardín Zen y diseño.</div></div>
+        <div class="event-row"><div class="time-slot">11:15 – 12:30</div><div class="description"><strong>Notting Hill & Little Venice</strong>Portobello Road Market.</div></div>
+        <div class="event-row"><div class="time-slot">12:45</div><div class="description"><strong>Palacio de Kensington</strong>Kensington Gardens y Hyde Park (En ese orden).</div></div>
+        <div class="event-row"><div class="time-slot">14:00</div><div class="description"><strong>Comida</strong>Cerca del British Museum.</div></div>
+        <div class="event-row"><div class="time-slot">15:00</div><div class="description"><strong>Museo Británico <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>A la salida pasar por Russell Square.</div></div>
+        <div class="event-row"><div class="time-slot">17:30</div><div class="description"><strong>Oxford Street y Regent Street</strong>Paseo de compras.</div></div>
+        <div class="event-row"><div class="time-slot">Noche</div><div class="description"><strong>Mercato Mayfair</strong>Cena en la iglesia.</div></div>
+
+        <h3 class="gallery-title">Fotos</h3>
+        <div class="photo-gallery">
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/kyoto-garden,london?lock=7" alt="Kyoto Garden"><div class="photo-caption">Kyoto Garden</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/design-museum,london?lock=8" alt="Design Museum"><div class="photo-caption">Design Museum</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/notting-hill,london?lock=9" alt="Notting Hill"><div class="photo-caption">Notting Hill</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/little-venice,london?lock=10" alt="Little Venice"><div class="photo-caption">Little Venice</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/kensington-palace,london?lock=11" alt="Palacio de Kensington"><div class="photo-caption">Palacio de Kensington</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/hyde-park,london?lock=12" alt="Hyde Park"><div class="photo-caption">Hyde Park</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/british-museum,london?lock=13" alt="British Museum"><div class="photo-caption">British Museum</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/russell-square,london?lock=14" alt="Russell Square"><div class="photo-caption">Russell Square</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/london,shopping-street?lock=115" alt="Oxford Street"><div class="photo-caption">Oxford Street</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/regent-street,london?lock=16" alt="Regent Street"><div class="photo-caption">Regent Street</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/mayfair,london,market?lock=17" alt="Mercato Mayfair"><div class="photo-caption">Mercato Mayfair</div></div>
+        </div>
+    </section>
+
+    <section class="day-card" id="dia3">
+        <div class="day-header">
+            <h2 class="day-title">Lunes</h2>
+            <span class="wake-up">Despertar 09:30</span>
+        </div>
+        <div class="event-row"><div class="time-slot">11:00 – 12:30</div><div class="description"><strong>Emirates Stadium</strong>Estadio del Arsenal: fotos y tienda.</div></div>
+        <div class="event-row"><div class="time-slot">13:00 – 16:00</div><div class="description"><strong>Camden Area</strong>Biblioteca Británica, Camden Town Hall y Market (Almuerzo).</div></div>
+        <div class="event-row"><div class="time-slot">16:00 – 18:00</div><div class="description"><strong>Regent’s Park</strong>Paseo bajando al centro.</div></div>
+        <div class="event-row"><div class="time-slot">18:30</div><div class="description"><strong>Centro y Chinatown</strong>Piccadilly Circus, Leicester Square y Chinatown.</div></div>
+
+        <h3 class="gallery-title">Fotos</h3>
+        <div class="photo-gallery">
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/emirates-stadium,london?lock=18" alt="Emirates Stadium"><div class="photo-caption">Emirates Stadium</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/british-library,london?lock=19" alt="Biblioteca Británica"><div class="photo-caption">Biblioteca Británica</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/camden-town-hall,london?lock=20" alt="Camden Town Hall"><div class="photo-caption">Camden Town Hall</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/camden-market,london?lock=21" alt="Camden Market"><div class="photo-caption">Camden Market</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/regents-park,london?lock=22" alt="Regent’s Park"><div class="photo-caption">Regent’s Park</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/piccadilly-circus,london?lock=23" alt="Piccadilly Circus"><div class="photo-caption">Piccadilly Circus</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/leicester-square,london?lock=24" alt="Leicester Square"><div class="photo-caption">Leicester Square</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/chinatown,london?lock=25" alt="Chinatown"><div class="photo-caption">Chinatown</div></div>
+        </div>
+    </section>
+
+    <section class="day-card" id="dia4">
+        <div class="day-header">
+            <h2 class="day-title">Martes</h2>
+            <span class="wake-up">Despertar 09:30</span>
+        </div>
+        <div class="event-row"><div class="time-slot">11:00 – 12:45</div><div class="description"><strong>St Paul a Tower Bridge</strong>Catedral ⮕ Millennium Bridge (DESDE LEJOS) ⮕ St Dunstan in the East ⮕ Torre de Londres y cruzar Tower Bridge.</div></div>
+        <div class="event-row"><div class="time-slot">13:30 – 15:00</div><div class="description"><strong>Borough Market</strong>Almuerzo.</div></div>
+        <div class="event-row"><div class="time-slot">15:30 – 16:15</div><div class="description"><strong>Westminster y Big Ben</strong>Palacio y Abadía. (Tate Britain a 15 min).</div></div>
+        <div class="event-row"><div class="time-slot">16:30</div><div class="description"><strong>Leake Street Tunnel</strong>Grafitis.</div></div>
+        <div class="event-row"><div class="time-slot">Tarde</div><div class="description"><strong>Southbank</strong>Paseo hacia el London Eye.</div></div>
+        <div class="event-row"><div class="time-slot">18:00</div><div class="description"><strong>Uber Boat</strong>Ruta Westminster Pier ⮕ Tower Pier.</div></div>
+        <div class="event-row"><div class="time-slot">19:30</div><div class="description"><strong>Horizon 22 <span class="tag pending">PENDIENTE RESERVA</span></strong>Mirador nocturno.</div></div>
+
+        <h3 class="gallery-title">Fotos</h3>
+        <div class="photo-gallery">
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/st-pauls-cathedral,exterior,london?lock=526" alt="St Paul’s Cathedral"><div class="photo-caption">St Paul’s Cathedral</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/millennium-bridge,thames,london?lock=327" alt="Millennium Bridge"><div class="photo-caption">Millennium Bridge</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/st-dunstan-in-the-east,london?lock=28" alt="St Dunstan in the East"><div class="photo-caption">St Dunstan in the East</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/tower-of-london?lock=29" alt="Torre de Londres"><div class="photo-caption">Torre de Londres</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/tower-bridge,london?lock=30" alt="Tower Bridge"><div class="photo-caption">Tower Bridge</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/borough-market,london?lock=31" alt="Borough Market"><div class="photo-caption">Borough Market</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/big-ben,london?lock=32" alt="Big Ben"><div class="photo-caption">Big Ben</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/houses-of-parliament,thames,london?lock=333" alt="Palacio de Westminster"><div class="photo-caption">Palacio de Westminster</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/westminster-abbey,london?lock=34" alt="Abadía de Westminster"><div class="photo-caption">Abadía de Westminster</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/leake-street-tunnel,london?lock=35" alt="Leake Street Tunnel"><div class="photo-caption">Leake Street Tunnel</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/southbank,london?lock=36" alt="Southbank"><div class="photo-caption">Southbank</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/london-eye,sunset?lock=237" alt="London Eye"><div class="photo-caption">London Eye</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/thames,river-bus,london?lock=138" alt="Uber Boat"><div class="photo-caption">Uber Boat</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/skyline,london?lock=39" alt="Horizon 22"><div class="photo-caption">Horizon 22</div></div>
+        </div>
+    </section>
+
+    <section class="day-card" id="dia5">
+        <div class="day-header">
+            <h2 class="day-title">Miércoles</h2>
+            <span class="wake-up">Despertar 08:30</span>
+        </div>
+        <div class="event-row"><div class="time-slot">10:00</div><div class="description"><strong>National Gallery <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>Desayuno en Trafalgar Square.</div></div>
+        <div class="event-row"><div class="time-slot">11:30</div><div class="description"><strong>Hamleys</strong>Últimas compras.</div></div>
+        <div class="event-row"><div class="time-slot">12:15</div><div class="description"><strong>Metro</strong>Victoria Line hacia Tottenham Hale.</div></div>
+        <div class="event-row"><div class="time-slot">12:50</div><div class="description"><strong>Aeropuerto</strong>Salida Bus National Express.</div></div>
+
+        <h3 class="gallery-title">Fotos</h3>
+        <div class="photo-gallery">
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/national-gallery,london?lock=40" alt="National Gallery"><div class="photo-caption">National Gallery</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/trafalgar-square,london?lock=41" alt="Trafalgar Square"><div class="photo-caption">Trafalgar Square</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/hamleys,london?lock=42" alt="Hamleys"><div class="photo-caption">Hamleys</div></div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
+    const navLinks = document.querySelectorAll('.navbar a');
+    const dayCards = document.querySelectorAll('.day-card');
+
+    const showDay = (dayId) => {
+        dayCards.forEach((card) => {
+            card.classList.toggle('is-active', card.id === dayId);
+        });
+
+        navLinks.forEach((link) => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${dayId}`);
+        });
+
+        window.scrollTo(0, 0);
+    };
+
+    navLinks.forEach((link) => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const dayId = link.getAttribute('href').replace('#', '');
+            showDay(dayId);
+        });
+    });
+
+    window.addEventListener('load', () => {
+        showDay('dia1');
+    });
+</script>
+
+</body>
+</html>
