@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Itinerario Londres 2026</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <style>
         :root {
             --london-red: #C8102E;
@@ -54,6 +55,15 @@
         }
 
         .day-card.is-active { display: block; }
+
+        .secondary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--london-red);
+        }
 
         .day-header {
             display: flex; align-items: baseline; justify-content: space-between;
@@ -120,6 +130,36 @@
 
         .photo-slot:hover .photo-caption { opacity: 1; }
 
+        .map-section { margin-top: 24px; }
+
+        .route-map {
+            width: 100%;
+            height: 280px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border: 1px solid #d9dfec;
+        }
+
+        .map-actions {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .map-link {
+            text-decoration: none;
+            background: var(--london-blue);
+            color: #fff;
+            font-size: 0.86rem;
+            font-weight: 700;
+            padding: 8px 12px;
+            border-radius: 999px;
+            transition: background 0.2s ease;
+        }
+
+        .map-link:hover { background: var(--london-red); }
+
         @media (max-width: 600px) {
             .navbar { gap: 5px; }
             .navbar a { padding: 5px 8px; font-size: 0.75rem; }
@@ -135,6 +175,7 @@
     <a href="#dia3">LUNES</a>
     <a href="#dia4">MARTES</a>
     <a href="#dia5">MIÉRCOLES</a>
+    <a href="#planes-secundarios">PLANES SECUNDARIOS</a>
 </nav>
 
 <header>
@@ -147,35 +188,42 @@
     <section class="day-card is-active" id="dia1">
         <div class="day-header">
             <h2 class="day-title">Sábado</h2>
-            <span class="wake-up">Llegada a Londres</span>
         </div>
-        <div class="event-row"><div class="time-slot">12.45</div><div class="description"><strong>Sky Garden <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>Mirador al atardecer.</div></div>
+        <div class="event-row"><div class="time-slot">10:00</div><div class="description"><strong>Leadenhall Market</strong>Parada antes del Sky Garden.</div></div>
+        <div class="event-row"><div class="time-slot">11:30</div><div class="description"><strong>The Garden at 120</strong>Parada opcional antes de Sky Garden.</div></div>
+        <div class="event-row"><div class="time-slot">12:45</div><div class="description"><strong>Sky Garden <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>Mirador al atardecer.</div></div>
         <div class="event-row"><div class="time-slot">13:30 – 14:20</div><div class="description"><strong>Maltby Street Market</strong>Almuerzo gourmet.</div></div>
         <div class="event-row"><div class="time-slot">15:20 – 16:00</div><div class="description"><strong>Stamford Bridge</strong>Estadio del Chelsea: fotos y tienda.</div></div>
         <div class="event-row"><div class="time-slot">16:30</div><div class="description"><strong>Natural History Museum <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>Visita al museo.</div></div>
         <div class="event-row"><div class="time-slot">18:00</div><div class="description"><strong>Harrods</strong>A 15 min andando del Museo.</div></div>        
         <h3 class="gallery-title">Fotos</h3>
         <div class="photo-gallery">
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/sky-garden,london?lock=6" alt="Sky Garden"><div class="photo-caption">Sky Garden</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/leadenhall-market,london?lock=145" alt="Leadenhall Market"><div class="photo-caption">Leadenhall Market</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/the-garden-at-120,london?lock=149" alt="The Garden at 120"><div class="photo-caption">The Garden at 120</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/sky-garden,london,viewpoint?lock=206" alt="Sky Garden"><div class="photo-caption">Sky Garden</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/market,london?lock=2" alt="Maltby Street Market"><div class="photo-caption">Maltby Street Market</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/stamford-bridge,chelsea,stadium?lock=3" alt="Stamford Bridge"><div class="photo-caption">Stamford Bridge</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/natural-history-museum,london?lock=4" alt="Natural History Museum"><div class="photo-caption">Natural History Museum</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/harrods,london?lock=5" alt="Harrods"><div class="photo-caption">Harrods</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/harrods,london,department-store?lock=205" alt="Harrods"><div class="photo-caption">Harrods</div></div>
+        </div>
+        <div class="map-section">
+            <h3 class="gallery-title">Mapa de ruta</h3>
+            <div class="route-map" id="map-dia1"></div>
+            <div class="map-actions"><a class="map-link" id="route-link-dia1" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a></div>
         </div>
     </section>
 
     <section class="day-card" id="dia2">
         <div class="day-header">
             <h2 class="day-title">Domingo</h2>
-            <span class="wake-up">Despertar 08:30</span>
         </div>
         <div class="event-row"><div class="time-slot">10:00 – 11:15</div><div class="description"><strong>Kyoto Garden y Design Museum</strong>Jardín Zen y diseño.</div></div>
         <div class="event-row"><div class="time-slot">11:15 – 12:30</div><div class="description"><strong>Notting Hill & Little Venice</strong>Portobello Road Market.</div></div>
         <div class="event-row"><div class="time-slot">12:45</div><div class="description"><strong>Palacio de Kensington</strong>Kensington Gardens y Hyde Park (En ese orden).</div></div>
-        <div class="event-row"><div class="time-slot">14:00</div><div class="description"><strong>Comida</strong>Cerca del British Museum.</div></div>
-        <div class="event-row"><div class="time-slot">15:00</div><div class="description"><strong>Museo Británico <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>A la salida pasar por Russell Square.</div></div>
-        <div class="event-row"><div class="time-slot">17:30</div><div class="description"><strong>Oxford Street y Regent Street</strong>Paseo de compras.</div></div>
-        <div class="event-row"><div class="time-slot">18:00</div><div class="description"><strong>Hamleys</strong>Osito.</div></div>
+        <div class="event-row"><div class="time-slot">15:00</div><div class="description"><strong>Museo Británico <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>Opcional pasar por Russell Square.</div></div>
+        <div class="event-row"><div class="time-slot">17:30</div><div class="description"><strong>Outernet London</strong>Parada inmersiva cerca de Tottenham Court Road.</div></div>
+        <div class="event-row"><div class="time-slot">18:00</div><div class="description"><strong>Oxford Street y Regent Street</strong>Paseo de compras.</div></div>
+        <div class="event-row"><div class="time-slot">18:15</div><div class="description"><strong>Hamleys</strong>Osito.</div></div>
         <div class="event-row"><div class="time-slot">19:00</div><div class="description"><strong>Mercato Mayfair</strong>Cena en la iglesia.</div></div>
 
         <h3 class="gallery-title">Fotos</h3>
@@ -185,99 +233,316 @@
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/notting-hill,london?lock=9" alt="Notting Hill"><div class="photo-caption">Notting Hill</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/little-venice,london?lock=10" alt="Little Venice"><div class="photo-caption">Little Venice</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/kensington-palace,london?lock=11" alt="Palacio de Kensington"><div class="photo-caption">Palacio de Kensington</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/hyde-park,london?lock=12" alt="Hyde Park"><div class="photo-caption">Hyde Park</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/british-museum,london?lock=13" alt="British Museum"><div class="photo-caption">British Museum</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/russell-square,london?lock=14" alt="Russell Square"><div class="photo-caption">Russell Square</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/hyde-park,london,lake?lock=212" alt="Hyde Park"><div class="photo-caption">Hyde Park</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/british-museum,london,interior?lock=213" alt="British Museum"><div class="photo-caption">British Museum</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/outernet-london,tottenham-court-road,led-screen?lock=348" alt="Outernet London"><div class="photo-caption">Outernet London</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/london,shopping-street?lock=115" alt="Oxford Street"><div class="photo-caption">Oxford Street</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/regent-street,london?lock=16" alt="Regent Street"><div class="photo-caption">Regent Street</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/hamleys,london?lock=42" alt="Hamleys"><div class="photo-caption">Hamleys</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/mayfair,london,market?lock=17" alt="Mercato Mayfair"><div class="photo-caption">Mercato Mayfair</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/hamleys,regent-street,toy-store,teddy-bear?lock=342" alt="Hamleys"><div class="photo-caption">Hamleys</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/mercato-mayfair,st-marks-church,food-hall?lock=317" alt="Mercato Mayfair"><div class="photo-caption">Mercato Mayfair</div></div>
+        </div>
+        <div class="map-section">
+            <h3 class="gallery-title">Mapa de ruta</h3>
+            <div class="route-map" id="map-dia2"></div>
+            <div class="map-actions"><a class="map-link" id="route-link-dia2" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a></div>
         </div>
     </section>
 
     <section class="day-card" id="dia3">
         <div class="day-header">
             <h2 class="day-title">Lunes</h2>
-            <span class="wake-up">Despertar 09:30</span>
         </div>
          <div class="event-row"><div class="time-slot">11:00 – 11:45</div><div class="description"><strong>Cambio de Guardia</strong>Palacio de St. James y Buckingham Palace --> Cruzamos Green Park para ir a la siguiente parada</div></div>
         <div class="event-row"><div class="time-slot">12:00 – 12:45</div><div class="description"><strong>Emirates Stadium</strong>Estadio del Arsenal: fotos y tienda.</div></div>
         <div class="event-row"><div class="time-slot">13:00 – 15:00</div><div class="description"><strong>Camden Town Market</strong>Almuerzo, fotomaton y souvenirs .</div></div>
         <div class="event-row"><div class="time-slot">15:15 – 16:30</div><div class="description"><strong>Regent’s Park</strong>Paseo bajando al centro.</div></div>
-        <div class="event-row"><div class="time-slot">18:30</div><div class="description"><strong>Centro y Chinatown</strong>Piccadilly Circus, Leicester Square y Chinatown.</div></div>
+        <div class="event-row"><div class="time-slot">18:30</div><div class="description"><strong>Centro y Chinatown</strong>Piccadilly Circus, Leicester Square(Lego Store y M&M's.) y Chinatown.</div></div>
 
         <h3 class="gallery-title">Fotos</h3>
         <div class="photo-gallery">
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/buckingham-palace,changing-guard?lock=101" alt="Buckingham Palace"><div class="photo-caption">Buckingham Palace</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/emirates-stadium,london?lock=18" alt="Emirates Stadium"><div class="photo-caption">Emirates Stadium</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/british-library,london?lock=19" alt="Biblioteca Británica"><div class="photo-caption">Biblioteca Británica</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/camden-town-hall,london?lock=20" alt="Camden Town Hall"><div class="photo-caption">Camden Town Hall</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/camden-market,london?lock=21" alt="Camden Market"><div class="photo-caption">Camden Market</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/british-library,london,reading-room?lock=219" alt="Biblioteca Británica"><div class="photo-caption">Biblioteca Británica</div></div>            <div class="photo-slot"><img src="https://loremflickr.com/600/400/camden-market,london?lock=21" alt="Camden Market"><div class="photo-caption">Camden Market</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/regents-park,london?lock=22" alt="Regent’s Park"><div class="photo-caption">Regent’s Park</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/piccadilly-circus,london?lock=23" alt="Piccadilly Circus"><div class="photo-caption">Piccadilly Circus</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/leicester-square,london?lock=24" alt="Leicester Square"><div class="photo-caption">Leicester Square</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/piccadilly-circus,london,night?lock=223" alt="Piccadilly Circus"><div class="photo-caption">Piccadilly Circus</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/leicester-square,london,west-end?lock=324" alt="Leicester Square"><div class="photo-caption">Leicester Square</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/chinatown,london?lock=25" alt="Chinatown"><div class="photo-caption">Chinatown</div></div>
+        </div>
+        <div class="map-section">
+            <h3 class="gallery-title">Mapa de ruta</h3>
+            <div class="route-map" id="map-dia3"></div>
+            <div class="map-actions"><a class="map-link" id="route-link-dia3" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a></div>
         </div>
     </section>
 
     <section class="day-card" id="dia4">
         <div class="day-header">
             <h2 class="day-title">Martes</h2>
-            <span class="wake-up">Despertar 09:30</span>
         </div>
+        <div class="event-row"><div class="time-slot">10:00</div><div class="description"><strong>Horizon 22 <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>Mirador panoramico antes de empezar la ruta.</div></div>
         <div class="event-row"><div class="time-slot">11:00 – 12:45</div><div class="description"><strong>St Paul a Tower Bridge</strong>Catedral ⮕ Millennium Bridge (DESDE LEJOS) ⮕ St Dunstan in the East ⮕ Torre de Londres y cruzar Tower Bridge.</div></div>
+        <div class="event-row"><div class="time-slot">13:00</div><div class="description"><strong>The Shard</strong>Parada antes de Borough Market.</div></div>
         <div class="event-row"><div class="time-slot">13:30 – 15:00</div><div class="description"><strong>Borough Market</strong>Almuerzo.</div></div>
         <div class="event-row"><div class="time-slot">15:30 – 16:30</div><div class="description"><strong>Westminster y Big Ben</strong>Palacio y Abadía. (Tate Britain a 15 min).</div></div>
         <div class="event-row"><div class="time-slot">16:45 – 17:30 </div><div class="description"><strong>Leake Street Tunnel</strong>Grafitis.</div></div>
         <div class="event-row"><div class="time-slot">17:45 – 18:45</div><div class="description"><strong>Jubilee Gardens</strong>Paseo hacia el London Eye.</div></div>
         <div class="event-row"><div class="time-slot">19:00</div><div class="description"><strong>Uber Boat</strong>Ruta London Eye Waterloo Pier ⮕ Canary Wharf Pier.</div></div>
-        <div class="event-row"><div class="time-slot">20:00</div><div class="description"><strong>Canary Wharf</strong>Wood Wharf Dock</div></div>
+        <div class="event-row"><div class="time-slot">20:00</div><div class="description"><strong>Canary Wharf</strong>Wood Wharf Dock , Adams Pl Bridge (el puente de luces de colores) ,
+Harbour Quay (el paseo junto al agua).</div></div>
 
 
         <h3 class="gallery-title">Fotos</h3>
         <div class="photo-gallery">
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/london,skyline,viewpoint?lock=246" alt="Horizon 22"><div class="photo-caption">Horizon 22</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/st-pauls-cathedral,exterior,london?lock=526" alt="St Paul’s Cathedral"><div class="photo-caption">St Paul’s Cathedral</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/millennium-bridge,thames,london?lock=327" alt="Millennium Bridge"><div class="photo-caption">Millennium Bridge</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/st-dunstan-in-the-east,london?lock=28" alt="St Dunstan in the East"><div class="photo-caption">St Dunstan in the East</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/tower-of-london?lock=29" alt="Torre de Londres"><div class="photo-caption">Torre de Londres</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/tower-bridge,london?lock=30" alt="Tower Bridge"><div class="photo-caption">Tower Bridge</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/borough-market,london?lock=31" alt="Borough Market"><div class="photo-caption">Borough Market</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/big-ben,london?lock=32" alt="Big Ben"><div class="photo-caption">Big Ben</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/tower-of-london,castle?lock=229" alt="Torre de Londres"><div class="photo-caption">Torre de Londres</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/tower-bridge,london,sunset?lock=230" alt="Tower Bridge"><div class="photo-caption">Tower Bridge</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/the-shard,london?lock=147" alt="The Shard"><div class="photo-caption">The Shard</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/borough-market,london,food-stalls?lock=231" alt="Borough Market"><div class="photo-caption">Borough Market</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/big-ben,london,clock-tower?lock=232" alt="Big Ben"><div class="photo-caption">Big Ben</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/houses-of-parliament,thames,london?lock=333" alt="Palacio de Westminster"><div class="photo-caption">Palacio de Westminster</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/westminster-abbey,london?lock=34" alt="Abadía de Westminster"><div class="photo-caption">Abadía de Westminster</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/leake-street-tunnel,london?lock=35" alt="Leake Street Tunnel"><div class="photo-caption">Leake Street Tunnel</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/southbank,london?lock=36" alt="Southbank"><div class="photo-caption">Jubilee Gardens</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/london-eye,sunset?lock=237" alt="London Eye"><div class="photo-caption">London Eye</div></div>
             <div class="photo-slot"><img src="https://loremflickr.com/600/400/london,thames,boat,night?lock=914" alt="Uber Boat"><div class="photo-caption">Uber Boat</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/london,thames,boat,night?lock=914" alt="Canary Wharf"><div class="photo-caption"> Canary Wharf</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/canary-wharf,london,skyline,night?lock=244" alt="Canary Wharf"><div class="photo-caption"> Canary Wharf</div></div>
 
 
+        </div>
+        <div class="map-section">
+            <h3 class="gallery-title">Mapa de ruta</h3>
+            <div class="route-map" id="map-dia4"></div>
+            <div class="map-actions"><a class="map-link" id="route-link-dia4" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a></div>
         </div>
     </section>
 
     <section class="day-card" id="dia5">
         <div class="day-header">
             <h2 class="day-title">Miércoles</h2>
-            <span class="wake-up">Despertar 08:30</span>
         </div>
         <div class="event-row"><div class="time-slot">10:00</div><div class="description"><strong>National Gallery <span class="tag confirmed">RESERVA CONFIRMADA</span></strong>Desayuno en Trafalgar Square.</div></div>
-        <div class="event-row"><div class="time-slot">12:15</div><div class="description"><strong>Metro</strong>Victoria Line hacia Tottenham Hale.</div></div>
+        <div class="event-row"><div class="time-slot">11:00</div><div class="description"><strong>Neal’s Yard</strong>Calle escondida colorida.</div></div>
+        <div class="event-row"><div class="time-slot">11:15</div><div class="description"><strong>Covent Garden</strong>Jubilee Market.</div></div>
+        <div class="event-row"><div class="time-slot">12:15</div><div class="description"><strong>Metro </strong>Victoria Line hacia Tottenham Hale.</div></div>
         <div class="event-row"><div class="time-slot">12:50</div><div class="description"><strong>Aeropuerto</strong>Salida Bus National Express.</div></div>
 
         <h3 class="gallery-title">Fotos</h3>
         <div class="photo-gallery">
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/national-gallery,london?lock=40" alt="National Gallery"><div class="photo-caption">National Gallery</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/trafalgar-square,london?lock=41" alt="Trafalgar Square"><div class="photo-caption">Trafalgar Square</div></div>
-            <div class="photo-slot"><img src="https://loremflickr.com/600/400/hamleys,london?lock=42" alt="Hamleys"><div class="photo-caption">Hamleys</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/national-gallery,london,trafalgar-square?lock=240" alt="National Gallery"><div class="photo-caption">National Gallery</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/trafalgar-square,london,fountains?lock=241" alt="Trafalgar Square"><div class="photo-caption">Trafalgar Square</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/neals-yard,covent-garden,london?lock=143" alt="Neal’s Yard"><div class="photo-caption">Neal’s Yard</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/jubilee-market,covent-garden,london?lock=142" alt="Jubilee Market"><div class="photo-caption">Jubilee Market</div></div>
+        </div>
+        <div class="map-section">
+            <h3 class="gallery-title">Mapa de ruta</h3>
+            <div class="route-map" id="map-dia5"></div>
+            <div class="map-actions"><a class="map-link" id="route-link-dia5" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a></div>
+        </div>
+    </section>
+
+    <section class="day-card" id="planes-secundarios">
+        <div class="day-header">
+            <h2 class="day-title">Planes secundarios</h2>
+            <span class="wake-up">Por si encaja durante el viaje</span>
+        </div>
+        <div class="event-row"><div class="time-slot"></div><div class="description"><strong>Catedral de Westminster</strong>Visita opcional si queda hueco.</div></div>
+        <div class="event-row"><div class="time-slot"></div><div class="description"><strong>Daunt Books Marylebone</strong>Libreria iconica para una parada rapida.</div></div>
+        <div class="event-row"><div class="time-slot"></div><div class="description"><strong>King's Cross (Anden 9 3/4)</strong>Esta a 20 min andando del Museo Britanico.</div></div>
+        <div class="event-row"><div class="time-slot"></div><div class="description"><strong>St. Pancras Renaissance London Hotel</strong>Esta a 20 min andando del Museo Britanico.</div></div>
+        <div class="event-row"><div class="time-slot"></div><div class="description"><strong>Tate Britain</strong>Parada cultural opcional.</div></div>
+
+        <h3 class="gallery-title">Fotos</h3>
+        <div class="photo-gallery">
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/westminster-cathedral,london?lock=150" alt="Catedral de Westminster"><div class="photo-caption">Catedral de Westminster</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/daunt-books,marylebone,london?lock=151" alt="Daunt Books Marylebone"><div class="photo-caption">Daunt Books Marylebone</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/kings-cross-station,platform-9-3-4,london?lock=152" alt="King's Cross"><div class="photo-caption">King's Cross (Anden 9 3/4)</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/st-pancras-renaissance-hotel,london?lock=153" alt="St. Pancras Renaissance London Hotel"><div class="photo-caption">St. Pancras Renaissance London Hotel</div></div>
+            <div class="photo-slot"><img src="https://loremflickr.com/600/400/tate-britain,thames,london?lock=353" alt="Tate Britain"><div class="photo-caption">Tate Britain</div></div>
         </div>
     </section>
 
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
+
+    const itineraryRoutes = {
+        dia1: {
+            stops: [
+                { name: 'Leadenhall Market', coords: [51.5128, -0.0836] },
+                { name: 'The Garden at 120', coords: [51.5146, -0.0806] },
+                { name: 'Sky Garden', coords: [51.5107, -0.0836] },
+                { name: 'Maltby Street Market', coords: [51.5007, -0.0718] },
+                { name: 'Stamford Bridge', coords: [51.4817, -0.1910] },
+                { name: 'Natural History Museum', coords: [51.4967, -0.1764] },
+                { name: 'Harrods', coords: [51.4995, -0.1636] }
+            ]
+        },
+        dia2: {
+            stops: [
+                { name: 'Kyoto Garden', coords: [51.5040, -0.2047] },
+                { name: 'Notting Hill', coords: [51.5099, -0.1966] },
+                { name: 'Palacio de Kensington', coords: [51.5050, -0.1877] },
+                { name: 'British Museum', coords: [51.5194, -0.1270] },
+                { name: 'Outernet London', coords: [51.5161, -0.1301] },
+                { name: 'Oxford Street', coords: [51.5154, -0.1410] },
+                { name: 'Hamleys', coords: [51.5152, -0.1410] },
+                { name: 'Mercato Mayfair', coords: [51.5100, -0.1474] }
+            ]
+        },
+        dia3: {
+            stops: [
+                { name: 'Buckingham Palace', coords: [51.5014, -0.1419] },
+                { name: 'Emirates Stadium', coords: [51.5549, -0.1084] },
+                { name: 'Camden Town Market', coords: [51.5415, -0.1420] },
+                { name: 'Regent\'s Park', coords: [51.5313, -0.1569] },
+                { name: 'Piccadilly Circus', coords: [51.5101, -0.1340] },
+                { name: 'Leicester Square', coords: [51.5113, -0.1281] },
+                { name: 'Chinatown', coords: [51.5110, -0.1300] }
+            ]
+        },
+        dia4: {
+            stops: [
+                { name: 'Horizon 22', coords: [51.5145, -0.0803] },
+                { name: 'St Paul\'s Cathedral', coords: [51.5138, -0.0984] },
+                { name: 'The Shard', coords: [51.5045, -0.0865] },
+                { name: 'Borough Market', coords: [51.5055, -0.0910] },
+                { name: 'Big Ben', coords: [51.5007, -0.1246] },
+                { name: 'Leake Street Tunnel', coords: [51.5010, -0.1120] },
+                { name: 'Jubilee Gardens', coords: [51.5033, -0.1195] },
+                { name: 'Canary Wharf', coords: [51.5054, -0.0235] }
+            ]
+        },
+        dia5: {
+            stops: [
+                { name: 'National Gallery', coords: [51.5089, -0.1283] },
+                { name: 'Neal\'s Yard', coords: [51.5134, -0.1267] },
+                { name: 'Jubilee Market', coords: [51.5118, -0.1235] },
+                { name: 'Covent Garden Station', coords: [51.5130, -0.1243] },
+                { name: 'Tottenham Hale', coords: [51.5880, -0.0594] },
+                { name: 'Stansted Airport', coords: [51.8897, 0.2389] }
+            ]
+        }
+    };
+
+    const routeColors = ['#e63946', '#1d3557', '#2a9d8f', '#f4a261', '#6a4c93', '#ef476f', '#118ab2', '#ff7f11'];
+    const mapInstances = {};
+    const renderedRoute = {};
+    const customSegments = {
+        'dia4-0': [
+            [51.5145, -0.0803],
+            [51.5167, -0.0831],
+            [51.5181, -0.0888],
+            [51.5175, -0.0948],
+            [51.5159, -0.0983],
+            [51.5138, -0.0984]
+        ],
+        'dia4-6': [
+            [51.5033, -0.1195],
+            [51.5036, -0.1128],
+            [51.5042, -0.1035],
+            [51.5052, -0.0910],
+            [51.5060, -0.0788],
+            [51.5068, -0.0665],
+            [51.5070, -0.0552],
+            [51.5066, -0.0440],
+            [51.5060, -0.0338],
+            [51.5054, -0.0235]
+        ]
+    };
+
+    const buildGoogleMapsLink = (stops) => {
+        const origin = `${stops[0].coords[0]},${stops[0].coords[1]}`;
+        const destination = `${stops[stops.length - 1].coords[0]},${stops[stops.length - 1].coords[1]}`;
+        const waypoints = stops.slice(1, -1).map((stop) => `${stop.coords[0]},${stop.coords[1]}`).join('|');
+        return `https://www.google.com/maps/dir/?api=1&travelmode=walking&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&waypoints=${encodeURIComponent(waypoints)}`;
+    };
+
+    const fetchSegment = async (fromCoords, toCoords) => {
+        const url = `https://router.project-osrm.org/route/v1/foot/${fromCoords[1]},${fromCoords[0]};${toCoords[1]},${toCoords[0]}?overview=full&geometries=geojson`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                return [fromCoords, toCoords];
+            }
+            const data = await response.json();
+            const geometry = data.routes && data.routes[0] && data.routes[0].geometry;
+            if (!geometry || !geometry.coordinates) {
+                return [fromCoords, toCoords];
+            }
+            return geometry.coordinates.map((point) => [point[1], point[0]]);
+        } catch (error) {
+            return [fromCoords, toCoords];
+        }
+    };
+
+    const createDayMap = async (dayId) => {
+        if (renderedRoute[dayId] || !itineraryRoutes[dayId]) {
+            return;
+        }
+
+        const mapElement = document.getElementById(`map-${dayId}`);
+        if (!mapElement) {
+            return;
+        }
+
+        const stops = itineraryRoutes[dayId].stops;
+        const map = L.map(mapElement, { zoomControl: true, attributionControl: true });
+        mapInstances[dayId] = map;
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+            maxZoom: 20,
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }).addTo(map);
+
+        const allPoints = [];
+        for (let i = 0; i < stops.length; i += 1) {
+            const stop = stops[i];
+            const marker = L.circleMarker(stop.coords, {
+                radius: 6,
+                color: '#0b1f4d',
+                weight: 2,
+                fillColor: '#ffffff',
+                fillOpacity: 1
+            }).addTo(map);
+            marker.bindTooltip(`${i + 1}. ${stop.name}`);
+            allPoints.push(stop.coords);
+        }
+
+        for (let i = 0; i < stops.length - 1; i += 1) {
+            const customSegmentKey = `${dayId}-${i}`;
+            const segmentPoints = customSegments[customSegmentKey] || await fetchSegment(stops[i].coords, stops[i + 1].coords);
+            L.polyline(segmentPoints, {
+                color: routeColors[i % routeColors.length],
+                weight: 5,
+                opacity: 0.9
+            }).addTo(map);
+            segmentPoints.forEach((point) => allPoints.push(point));
+        }
+
+        const bounds = L.latLngBounds(allPoints);
+        map.fitBounds(bounds, { padding: [24, 24] });
+
+        const linkElement = document.getElementById(`route-link-${dayId}`);
+        if (linkElement) {
+            linkElement.href = buildGoogleMapsLink(stops);
+        }
+
+        renderedRoute[dayId] = true;
+    };
+
+    const ensureVisibleMapSize = (dayId) => {
+        if (!mapInstances[dayId]) {
+            return;
+        }
+        setTimeout(() => mapInstances[dayId].invalidateSize(), 120);
+    };
 
     const navLinks = document.querySelectorAll('.navbar a');
     const dayCards = document.querySelectorAll('.day-card');
@@ -290,6 +555,9 @@
         navLinks.forEach((link) => {
             link.classList.toggle('active', link.getAttribute('href') === `#${dayId}`);
         });
+
+        createDayMap(dayId);
+        ensureVisibleMapSize(dayId);
 
         window.scrollTo(0, 0);
     };
@@ -309,14 +577,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
